@@ -5,9 +5,13 @@ const Category = require('../models/category')
 const productController = {}
 
 productController.getProducts = async (req, res) => {
-  const products = await Product.find({
-    category: req.query.categories.split(',')
-  }).populate('category')
+  let filter = {}
+
+  if (req.query.categories) {
+    filter = { category: req.query.categories.split(',') }
+  }
+
+  const products = await Product.find(filter).populate('category')
 
   if (!products) return res.status(500).json({ success: false })
 
@@ -120,7 +124,7 @@ productController.deleteProduct = async (req, res) => {
 }
 
 productController.totalProducts = async (req, res) => {
-  const productCount = await Product.countDocuments((count) => count)
+  const productCount = await Product.countDocuments()
 
   if (!productCount) return res.status(500).json({ success: false })
 
