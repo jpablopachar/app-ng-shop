@@ -11,9 +11,11 @@ app.use(morgan('dev'))
 app.use(cors())
 app.use(express.json())
 app.use(authJwt())
-app.use(errorHandler())
+app.use(errorHandler)
 
 app.use('/api/categories', require('../routes/category'))
 app.use('/api/products', require('../routes/product'))
+app.use('/api/users', require('../routes/user'))
+app.use('/api/orders', require('../routes/order'))
 
 module.exports = app

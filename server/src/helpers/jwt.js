@@ -1,6 +1,6 @@
 const expressJwt = require('express-jwt')
 
-function authJwt () {
+module.exports = function authJwt () {
   const secret = process.env.SECRET
 
   return expressJwt({ secret, algorithms: ['HS256', isRevoked] }).unless({
@@ -18,5 +18,3 @@ async function isRevoked (req, payload, done) {
 
   done()
 }
-
-module.exports = authJwt()
