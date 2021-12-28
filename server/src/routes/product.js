@@ -6,13 +6,14 @@ const {
   updateProduct,
   deleteProduct,
   totalProducts,
-  totalFeatured
+  totalFeatured,
+  uploadOptions
 } = require('../controllers/product')
 
 const router = Router()
 
-router.route('/').get(getProducts).post(addProduct)
-router.route('/:id').get(getProduct).put(updateProduct).delete(deleteProduct)
+router.route('/').get(getProducts).post(uploadOptions.single('image'), addProduct)
+router.route('/:id').get(getProduct).put(uploadOptions.single('image'), updateProduct).delete(deleteProduct)
 router.get('/get/count', totalProducts)
 router.get('/get/featured/:count', totalFeatured)
 

@@ -1,21 +1,22 @@
 const { isValidObjectId } = require('mongoose')
 const Product = require('../models/product')
 const Category = require('../models/category')
-// const multer = require('multer')
+const multer = require('multer')
 
-/* const FILE_TYPE_MAP = {
+const FILE_TYPE_MAP = {
   'image/png': 'png',
   'image/jpeg': 'jpeg',
   'image/jpg': 'jpg'
-} */
-/* const storage = multer.diskStorage({
+}
+
+const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     let uploadError = new Error('Invalid image type')
     const isValid = FILE_TYPE_MAP[file.mimetype]
 
     if (isValid) uploadError = null
 
-    cb(uploadError, 'public/uploads')
+    cb(uploadError, 'src/public/uploads')
   },
   filename: function (req, file, cb) {
     const filename = file.originalname.split(' ').join('-')
@@ -23,9 +24,11 @@ const Category = require('../models/category')
 
     cb(null, `${filename}-${Date.now()}.${extension}`)
   }
-}) */
+})
 
 const productController = {}
+
+productController.uploadOptions = multer({ storage })
 
 productController.getProducts = async (req, res) => {
   let filter = {}
@@ -54,12 +57,17 @@ productController.addProduct = async (req, res) => {
 
   if (!objCategory) return res.status(400).send('Invalid category')
 
+  const file = req.file
+
+  if (!file) return res.status(400).send('No image in the request')
+
+  const fileName = file.filename
+  const basePath = `${req.protocol}://${req.get('host')}/public/uploads/`
   const {
     category,
     name,
     description,
     richDescription,
-    image,
     brand,
     price,
     countInStock,
@@ -72,7 +80,7 @@ productController.addProduct = async (req, res) => {
     name,
     description,
     richDescription,
-    image,
+    image: `${basePath}${fileName}`,
     brand,
     price,
     category,
@@ -91,18 +99,35 @@ productController.addProduct = async (req, res) => {
 
 productController.updateProduct = async (req, res) => {
   const { id } = req.params
+
+  let imagePath = ''
+
   if (!isValidObjectId(id)) return res.status(400).send('Invalid product id')
 
   const objCategory = await Category.findById(req.body.category)
 
   if (!objCategory) return res.status(400).send('Invalid category')
 
+  const objProduct = await Product.findById(id)
+
+  if (!objProduct) return res.status(400).send('Invalid product')
+
+  const file = req.file
+
+  if (file) {
+    const fileName = file.filename
+    const basePath = `${req.protocol}://${req.get('host')}/public/uploads/`
+
+    imagePath = `${basePath}${fileName}`
+  } else {
+    imagePath = objProduct.image
+  }
+
   const {
     category,
     name,
     description,
     richDescription,
-    image,
     brand,
     price,
     countInStock,
@@ -114,13 +139,13 @@ productController.updateProduct = async (req, res) => {
   const product = await Product.findByIdAndUpdate(
     id,
     {
-      category,
       name,
       description,
       richDescription,
-      image,
+      image: imagePath,
       brand,
       price,
+      category,
       countInStock,
       rating,
       numReviews,
@@ -163,6 +188,30 @@ productController.totalFeatured = async (req, res) => {
   if (!products) return res.status(500).json({ success: false })
 
   res.status(200).send(products)
+}
+
+productController.galleryImages = async (req, res) => {
+  const { id } = req.params
+
+  if (isValidObjectId(id)) return res.status(400).send('Invalid product id')
+
+  const images = []
+  const files = []
+  const basePath = `${req.protocol}://${req.get('host')}/public/uploads/`
+
+  if (files) {
+    files.map((file) => images.push(`${basePath}${file.filename}`))
+  }
+
+  const product = await Product.findByIdAndUpdate(
+    id,
+    { images },
+    { new: true }
+  )
+
+  if (!product) return res.status(500).send('The gallery cannot be updated')
+
+  res.send(product)
 }
 
 module.exports = productController
