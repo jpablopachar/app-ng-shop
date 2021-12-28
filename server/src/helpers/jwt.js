@@ -3,12 +3,12 @@ const expressJwt = require('express-jwt')
 module.exports = function authJwt () {
   const secret = process.env.SECRET
 
-  return expressJwt({ secret, algorithms: ['HS256', isRevoked] }).unless({
+  return expressJwt({ secret, algorithms: ['HS256'], isRevoked }).unless({
     path: [
       { url: /\/api\/products(.*)/, methods: ['GET', 'OPTIONS'] },
       { url: /\/api\/categories(.*)/, methods: ['GET', 'OPTIONS'] },
       '/api/users/login',
-      '/api/users/register'
+      'api/users/register'
     ]
   })
 }

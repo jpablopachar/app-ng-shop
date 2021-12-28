@@ -3,6 +3,7 @@ const cors = require('cors')
 const morgan = require('morgan')
 const authJwt = require('../helpers/jwt')
 const errorHandler = require('../helpers/error-handler')
+const path = require('path')
 
 const app = express()
 
@@ -11,6 +12,7 @@ app.use(morgan('dev'))
 app.use(cors())
 app.use(express.json())
 app.use(authJwt())
+app.use('../public/uploads', express.static(path.join(__dirname, '/public/uploads')))
 app.use(errorHandler)
 
 app.use('/api/categories', require('../routes/category'))

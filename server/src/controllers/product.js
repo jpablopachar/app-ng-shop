@@ -1,6 +1,29 @@
 const { isValidObjectId } = require('mongoose')
 const Product = require('../models/product')
 const Category = require('../models/category')
+// const multer = require('multer')
+
+/* const FILE_TYPE_MAP = {
+  'image/png': 'png',
+  'image/jpeg': 'jpeg',
+  'image/jpg': 'jpg'
+} */
+/* const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    let uploadError = new Error('Invalid image type')
+    const isValid = FILE_TYPE_MAP[file.mimetype]
+
+    if (isValid) uploadError = null
+
+    cb(uploadError, 'public/uploads')
+  },
+  filename: function (req, file, cb) {
+    const filename = file.originalname.split(' ').join('-')
+    const extension = FILE_TYPE_MAP[file.mimetype]
+
+    cb(null, `${filename}-${Date.now()}.${extension}`)
+  }
+}) */
 
 const productController = {}
 

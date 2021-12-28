@@ -129,7 +129,7 @@ userController.login = async (req, res) => {
 
   if (user && bcryptjs.compareSync(password, user.passwordHash)) {
     const token = jwt.sign({ userId: user.id, isAdmin: user.isAdmin }, secret, {
-      expiresIn: 'id'
+      expiresIn: '1d'
     })
 
     res.status(200).send({ user: user.email, token })
