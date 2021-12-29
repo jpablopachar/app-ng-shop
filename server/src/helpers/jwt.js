@@ -5,10 +5,13 @@ module.exports = function authJwt () {
 
   return expressJwt({ secret, algorithms: ['HS256'], isRevoked }).unless({
     path: [
+      /* { url: /\/public\/uploads(.*)/, methods: ['GET', 'OPTIONS'] },
       { url: /\/api\/products(.*)/, methods: ['GET', 'OPTIONS'] },
       { url: /\/api\/categories(.*)/, methods: ['GET', 'OPTIONS'] },
+      { url: /\/api\/orders(.*)/, methods: ['GET', 'OPTIONS', 'POST'] },
       '/api/users/login',
-      'api/users/register'
+      'api/users/register', */
+      { url: /(.*)/ }
     ]
   })
 }
