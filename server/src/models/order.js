@@ -20,4 +20,6 @@ const orderSchema = Schema({
   dateOrdered: { type: Date, default: Date.now }
 })
 
+orderSchema.set('toJSON', { virtuals: true })
+
 module.exports = model('Order', orderSchema)

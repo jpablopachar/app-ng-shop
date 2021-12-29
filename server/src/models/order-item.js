@@ -5,4 +5,6 @@ const orderItemSchema = Schema({
   product: { type: Schema.Types.ObjectId, ref: 'Product' }
 })
 
+orderItemSchema.set('toJSON', { virtuals: true })
+
 module.exports = model('OrderItem', orderItemSchema)

@@ -16,4 +16,6 @@ const productSchema = Schema({
   dateCreated: { type: Date, default: Date.now }
 })
 
+productSchema.set('toJSON', { virtuals: true })
+
 module.exports = model('Product', productSchema)

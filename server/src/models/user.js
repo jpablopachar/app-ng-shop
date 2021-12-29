@@ -13,4 +13,6 @@ const userSchema = Schema({
   country: { type: String, default: '' }
 })
 
+userSchema.set('toJSON', { virtuals: true })
+
 module.exports = model('User', userSchema)

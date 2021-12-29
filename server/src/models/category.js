@@ -6,4 +6,6 @@ const categorySchema = Schema({
   color: { type: String }
 })
 
+categorySchema.set('toJSON', { virtuals: true })
+
 module.exports = model('Category', categorySchema)
