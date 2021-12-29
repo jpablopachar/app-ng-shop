@@ -1,0 +1,25 @@
+// Libraries
+@import '~primeicons/primeicons.css';
+@import '~primeng/resources/themes/saga-blue/theme.css';
+@import '~primeng/resources/primeng.min.css';
+@import '~primeflex/primeflex.scss';
+
+// Base
+@import './base/colors.scss';
+@import './base/fonts.scss';
+@import './base/mixins.scss';
+@import './base/config.scss';
+
+// Pages
+@import './apps/client/pages/home.scss';
+@import './apps/client/pages/products-list.scss';
+
+// Shared
+@import './apps/client/shared/header.scss';
+@import './apps/client/shared/footer.scss';
+
+// Libs
+@import './libs/ui/ui.scss';
+@import './libs/products/products.scss';
+@import './libs/orders/orders.scss';
+@import './libs/users/users.scss';
