@@ -12,8 +12,10 @@ app.use(morgan('dev'))
 app.use(cors())
 app.use(express.json())
 app.use(authJwt())
-app.use(express.static(path.join(__dirname, 'public/uploads')))
+app.use(express.static(path.join(__dirname, '../public/uploads/')))
 app.use(errorHandler)
+
+console.log(path.join(__dirname))
 
 app.use('/api/categories', require('../routes/category'))
 app.use('/api/products', require('../routes/product'))

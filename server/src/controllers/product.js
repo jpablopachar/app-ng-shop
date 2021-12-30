@@ -28,7 +28,7 @@ const storage = multer.diskStorage({
 
 const productController = {}
 
-productController.uploadOptions = multer({ storage })
+productController.uploadOptions = multer({ storage }).single('image')
 
 productController.getProducts = async (req, res) => {
   let filter = {}
@@ -62,7 +62,7 @@ productController.addProduct = async (req, res) => {
   if (!file) return res.status(400).send('No image in the request')
 
   const fileName = file.filename
-  const basePath = `${req.protocol}://${req.get('host')}/public/uploads/`
+  const image = `${req.protocol}://${req.get('host')}/${fileName}`
   const {
     category,
     name,
@@ -80,7 +80,7 @@ productController.addProduct = async (req, res) => {
     name,
     description,
     richDescription,
-    image: `${basePath}${fileName}`,
+    image,
     brand,
     price,
     category,
@@ -100,7 +100,7 @@ productController.addProduct = async (req, res) => {
 productController.updateProduct = async (req, res) => {
   const { id } = req.params
 
-  let imagePath = ''
+  let image = ''
 
   if (!isValidObjectId(id)) return res.status(400).send('Invalid product id')
 
@@ -116,11 +116,11 @@ productController.updateProduct = async (req, res) => {
 
   if (file) {
     const fileName = file.filename
-    const basePath = `${req.protocol}://${req.get('host')}/public/uploads/`
+    const basePath = `${req.protocol}://${req.get('host')}`
 
-    imagePath = `${basePath}${fileName}`
+    image = `${basePath}/${fileName}`
   } else {
-    imagePath = objProduct.image
+    image = objProduct.image
   }
 
   const {
@@ -142,7 +142,7 @@ productController.updateProduct = async (req, res) => {
       name,
       description,
       richDescription,
-      image: imagePath,
+      image,
       brand,
       price,
       category,

@@ -10,24 +10,24 @@ import { Category } from '../models/category';
 export class CategoriesService {
   private _urlCategories: string;
 
-  constructor(private readonly http: HttpClient) {
+  constructor(private readonly _http: HttpClient) {
     this._urlCategories = `${environment.apiUrl}/categories`;
   }
 
   public getCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(this._urlCategories);
+    return this._http.get<Category[]>(this._urlCategories);
   }
 
   public getCategory(categoryId: string): Observable<Category> {
-    return this.http.get<Category>(`${this._urlCategories}/${categoryId}`);
+    return this._http.get<Category>(`${this._urlCategories}/${categoryId}`);
   }
 
   public createCategory(category: Category): Observable<Category> {
-    return this.http.post<Category>(this._urlCategories, category);
+    return this._http.post<Category>(this._urlCategories, category);
   }
 
   public updateCategory(category: Category): Observable<Category> {
-    return this.http.put<Category>(
+    return this._http.put<Category>(
       `${this._urlCategories}/${category.id}`,
       category
     );
@@ -36,7 +36,7 @@ export class CategoriesService {
   public deleteCategory(
     categoryId: string
   ): Observable<{ success: boolean; message: string }> {
-    return this.http.get<{ success: boolean; message: string }>(
+    return this._http.delete<{ success: boolean; message: string }>(
       `${this._urlCategories}/${categoryId}`
     );
   }

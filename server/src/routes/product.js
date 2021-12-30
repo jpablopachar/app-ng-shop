@@ -12,8 +12,8 @@ const {
 
 const router = Router()
 
-router.route('/').get(getProducts).post(uploadOptions.single('image'), addProduct)
-router.route('/:id').get(getProduct).put(uploadOptions.single('image'), updateProduct).delete(deleteProduct)
+router.route('/').get(getProducts).post(uploadOptions, addProduct)
+router.route('/:id').get(getProduct).put(uploadOptions, updateProduct).delete(deleteProduct)
 router.get('/get/count', totalProducts)
 router.get('/get/featured/:count', totalFeatured)
 
