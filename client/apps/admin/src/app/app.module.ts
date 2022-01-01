@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 import { OrdersService } from '@client/orders';
 import { CategoriesService, ProductsService } from '@client/products';
+import { AuthGuard, AuthInterceptor, UsersModule } from '@client/users';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -53,13 +54,14 @@ const UX_MODULE = [
   InputSwitchModule,
   TagModule,
   InputMaskModule,
-  FieldsetModule
+  FieldsetModule,
 ];
 
 const routes: Routes = [
   {
     path: '',
     component: ShellComponent,
+    canActivate: [AuthGuard],
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'categories', component: CategoriesListComponent },
@@ -72,7 +74,7 @@ const routes: Routes = [
       { path: 'users/form', component: UsersFormComponent },
       { path: 'users/form/:id', component: UsersFormComponent },
       { path: 'orders', component: OrdersListComponent },
-      { path: 'orders/:id', component: OrdersDetailComponent }
+      { path: 'orders/:id', component: OrdersDetailComponent },
     ],
   },
 ];
@@ -91,7 +93,7 @@ const routes: Routes = [
     UsersFormComponent,
     CountriesPipe,
     OrdersListComponent,
-    OrdersDetailComponent
+    OrdersDetailComponent,
   ],
   imports: [
     BrowserModule,
@@ -100,14 +102,16 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(routes, { initialNavigation: 'enabled' }),
-    ...UX_MODULE
+    UsersModule,
+    ...UX_MODULE,
   ],
   providers: [
     MessageService,
     ConfirmationService,
     CategoriesService,
     ProductsService,
-    OrdersService
+    OrdersService,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })
