@@ -172,11 +172,11 @@ userController.register = async (req, res) => {
 }
 
 userController.usersCount = async (req, res) => {
-  const numUsers = await User.countDocuments()
+  const usersCount = await User.countDocuments()
 
-  if (!numUsers) return res.status(500).json({ success: false })
+  if (!usersCount) return res.status(500).json({ success: false })
 
-  res.send({ numUsers })
+  res.send({ usersCount })
 }
 
 module.exports = userController

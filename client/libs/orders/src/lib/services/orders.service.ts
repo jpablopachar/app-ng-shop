@@ -1,43 +1,63 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@env/environment';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Order } from '../models/order';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OrdersService {
-  private _urlProducts: string;
+  private _urlOrders: string;
 
-  constructor(private readonly http: HttpClient) {
-    this._urlProducts = `${environment.apiUrl}/orders`;
+  constructor(private readonly _http: HttpClient) {
+    this._urlOrders = `${environment.apiUrl}/orders`;
   }
 
   public getOrders(): Observable<Order[]> {
-    return this.http.get<Order[]>(this._urlProducts);
+    return this._http.get<Order[]>(this._urlOrders);
   }
 
   public getOrder(orderId: string): Observable<Order> {
-    return this.http.get<Order>(`${this._urlProducts}/${orderId}`);
+    return this._http.get<Order>(`${this._urlOrders}/${orderId}`);
   }
 
   public createOrder(order: Order): Observable<Order> {
-    return this.http.post<Order>(this._urlProducts, order);
+    return this._http.post<Order>(this._urlOrders, order);
   }
 
   public updateOrder(
     orderStatus: { status: string },
     orderId: string
   ): Observable<Order> {
-    return this.http.put<Order>(`${this._urlProducts}/${orderId}`, orderStatus);
+    return this._http.put<Order>(`${this._urlOrders}/${orderId}`, orderStatus);
   }
 
   public deleteOrder(
     orderId: string
   ): Observable<{ success: boolean; message: string }> {
-    return this.http.delete<{ success: boolean; message: string }>(
-      `${this._urlProducts}/${orderId}`
+    return this._http.delete<{ success: boolean; message: string }>(
+      `${this._urlOrders}/${orderId}`
+    );
+  }
+
+  public getOrdersCount() {
+    return this._http.get<number>(`${this._urlOrders}/get/count`).pipe(
+      map((res: any) => {
+        console.log(res);
+
+        return res.orderCount;
+      })
+    );
+  }
+
+  public getTotalSales() {
+    return this._http.get<number>(`${this._urlOrders}/get/totalSales`).pipe(
+      map((res: any) => {
+        console.log(res);
+
+        return res.totalSales;
+      })
     );
   }
 }

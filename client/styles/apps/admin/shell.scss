@@ -15,11 +15,11 @@
     width: 175px;
     background-color: #0a1d31;
     height: 100%;
+    top: 0;
 
     .logo {
       padding: 20px;
       width: 100%;
-      border-bottom: 1px solid #19487b;
 
       img {
         max-width: 100%;
@@ -37,51 +37,31 @@
           width: 100%;
 
           a {
-            color: #fff;
+            color: var(--surface-a);
             padding: 10px 15px;
             display: block;
             width: 100%;
 
+            &:hover {
+              background-color: var(--blue-700);
+            }
+
             i {
               margin-right: 8px;
-              margin-top: -2px;
+              margin-top: 0;
               float: left;
             }
 
-            &:hover {
-              background-color: #19487b;
-            }
-
-            &.active {
-              color: #45af7f;
-            }
-          }
-
-          &.logout {
-            a {
-              color: #4a97e9;
+            &.logout {
+              color: var(--blue-500);
             }
           }
         }
       }
     }
   }
-}
 
-.admin-page {
-  padding: 15px;
-
-  &-header {
-    .title {
-
-    }
-
-    .actions {
-      text-align: right;
-    }
-  }
-
-  .p-fiedset {
-    margin-bottom: 15px;
+  &-page {
+    padding: 15px;
   }
 }

@@ -172,11 +172,11 @@ productController.deleteProduct = async (req, res) => {
 }
 
 productController.totalProducts = async (req, res) => {
-  const productCount = await Product.countDocuments()
+  const productsCount = await Product.countDocuments()
 
-  if (!productCount) return res.status(500).json({ success: false })
+  if (!productsCount) return res.status(500).json({ success: false })
 
-  res.status(200).send({ productCount })
+  res.status(200).send({ productsCount })
 }
 
 productController.totalFeatured = async (req, res) => {

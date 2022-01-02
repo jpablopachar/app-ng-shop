@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 import { getName, getNames, registerLocale } from 'i18n-iso-countries';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { User } from '../models/user';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -43,6 +43,12 @@ export class UsersService {
     return this._http.delete<{ success: boolean; message: string }>(
       `${this._urlUsers}/${userId}`
     );
+  }
+
+  public getUsersCount(): Observable<number> {
+    return this._http
+      .get<{ usersCount: number }>(`${this._urlUsers}/get/count`)
+      .pipe(map((res: { usersCount: number }): number => res.usersCount));
   }
 
   public getCountries(): {
