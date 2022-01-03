@@ -76,10 +76,10 @@ const UX_MODULE = [
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    AppRoutingModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    AppRoutingModule,
     UsersModule,
     ...UX_MODULE,
   ],

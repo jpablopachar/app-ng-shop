@@ -2,14 +2,15 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { OrdersService } from '@client/orders';
 import { ProductsService } from '@client/products';
 import { UsersService } from '@client/users';
-import { combineLatest, Subscription } from 'rxjs';
+import { combineLatest, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'admin-dashboard',
   templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  private dashboardSubs: Subscription | undefined;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private _dashboardSubject: Subject<any>;
   public statistics: number[];
 
   constructor(
@@ -18,6 +19,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private readonly _ordersService: OrdersService
   ) {
     this.statistics = [];
+    this._dashboardSubject = new Subject();
   }
 
   ngOnInit(): void {
@@ -25,15 +27,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private getStatistics(): void {
-    this.dashboardSubs = combineLatest([
+    combineLatest([
       // this._ordersService.getOrdersCount(),
       // this._ordersService.getTotalSales(),
       this._usersService.getUsersCount(),
       this._productService.getProductsCount()
-    ]).subscribe((values: [number, number]): [number, number] => this.statistics = values);
+    ]).pipe(takeUntil(this._dashboardSubject)).subscribe((values: [number, number]): [number, number] => this.statistics = values);
   }
 
   ngOnDestroy(): void {
-    if (this.dashboardSubs) { this.dashboardSubs.unsubscribe(); }
+    this._dashboardSubject.next(null);
+    this._dashboardSubject.complete()
   }
 }

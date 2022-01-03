@@ -34,13 +34,15 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '',
+    redirectTo: 'login',
     pathMatch: 'full'
   }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { initialNavigation: 'enabled' })],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  declarations: [],
+  providers: []
 })
 export class AppRoutingModule { }
