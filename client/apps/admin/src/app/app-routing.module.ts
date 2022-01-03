@@ -43,6 +43,6 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes, { initialNavigation: 'enabled' })],
   exports: [RouterModule],
   declarations: [],
-  providers: []
+  providers: [AuthGuard]
 })
 export class AppRoutingModule { }
