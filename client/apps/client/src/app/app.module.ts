@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
-import { ProductsModule } from '@client/products';
+import { ProductsModule, ProductsService } from '@client/products';
 import { UiModule } from '@client/ui';
 import { AccordionModule } from 'primeng/accordion';
 import { AppComponent } from './app.component';
@@ -36,7 +36,7 @@ const routes: Routes = [
     ProductsModule,
     UiModule,
   ],
-  providers: [],
+  providers: [ProductsService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
