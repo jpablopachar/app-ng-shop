@@ -63,6 +63,7 @@ productController.addProduct = async (req, res) => {
 
   const fileName = file.filename
   const image = `${req.protocol}://${req.get('host')}/${fileName}`
+  console.log(fileName)
   const {
     category,
     name,
@@ -117,6 +118,8 @@ productController.updateProduct = async (req, res) => {
   if (file) {
     const fileName = file.filename
     const basePath = `${req.protocol}://${req.get('host')}`
+
+    console.log(fileName)
 
     image = `${basePath}/${fileName}`
   } else {
@@ -197,7 +200,7 @@ productController.galleryImages = async (req, res) => {
 
   const images = []
   const files = []
-  const basePath = `${req.protocol}://${req.get('host')}/public/uploads/`
+  const basePath = `${req.protocol}://${req.get('host')}/src/public/uploads/`
 
   if (files) {
     files.map((file) => images.push(`${basePath}${file.filename}`))
