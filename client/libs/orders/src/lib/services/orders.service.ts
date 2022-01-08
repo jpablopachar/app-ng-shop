@@ -9,9 +9,11 @@ import { Order } from '../models/order';
 })
 export class OrdersService {
   private _urlOrders: string;
+  private _urlProducts: string;
 
   constructor(private readonly _http: HttpClient) {
     this._urlOrders = `${environment.apiUrl}/orders`;
+    this._urlProducts = `${environment.apiUrl}/products`;
   }
 
   public getOrders(): Observable<Order[]> {
@@ -42,22 +44,18 @@ export class OrdersService {
   }
 
   public getOrdersCount() {
-    return this._http.get<number>(`${this._urlOrders}/get/count`).pipe(
-      map((res: any) => {
-        console.log(res);
-
-        return res.orderCount;
-      })
-    );
+    return this._http
+      .get<number>(`${this._urlOrders}/get/count`)
+      .pipe(map((res: any) => res.orderCount));
   }
 
   public getTotalSales() {
-    return this._http.get<number>(`${this._urlOrders}/get/totalSales`).pipe(
-      map((res: any) => {
-        console.log(res);
+    return this._http
+      .get<number>(`${this._urlOrders}/get/totalSales`)
+      .pipe(map((res: any) => res.totalSales));
+  }
 
-        return res.totalSales;
-      })
-    );
+  public getProduct(productId: string): Observable<any> {
+    return this._http.get<any>(`${this._urlProducts}/${productId}`);
   }
 }

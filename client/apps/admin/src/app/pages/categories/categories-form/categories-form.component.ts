@@ -84,8 +84,6 @@ export class CategoriesFormComponent implements OnInit {
         this._categoriesService
           .getCategory(categoryId)
           .subscribe((category: Category): void => {
-            console.log(category);
-            
             const { name, icon, color } = category;
 
             this.form.setValue({ name, icon, color });

@@ -26,15 +26,10 @@ export class CategoriesListComponent implements OnInit {
   private getCategories(): void {
     this._categoriesService
       .getCategories()
-      .subscribe((res: Category[]) => {
-        console.log(res);
-        this.categories = res;
-      });
+      .subscribe((res: Category[]) => this.categories = res);
   }
 
   public updateCategory(categoryId: string): void {
-    console.log(categoryId);
-    
     this._router.navigateByUrl(`categories/form/${categoryId}`);
   }
 
