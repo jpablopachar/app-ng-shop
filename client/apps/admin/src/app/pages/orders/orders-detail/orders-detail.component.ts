@@ -56,7 +56,7 @@ export class OrdersDetailComponent implements OnInit {
     const status = event.value;
 
     if (this.order) {
-      this._orderService.updateOrder({ status }, this.order.id).subscribe({
+      this._orderService.updateOrder({ status }, (this.order.id as string)).subscribe({
         next: (): void => {
           this._messageService.add({
             severity: 'success',

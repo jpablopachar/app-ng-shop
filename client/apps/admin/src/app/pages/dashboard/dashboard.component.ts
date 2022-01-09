@@ -6,7 +6,7 @@ import { combineLatest, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'admin-dashboard',
-  templateUrl: './dashboard.component.html'
+  templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -28,15 +28,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   private getStatistics(): void {
     combineLatest([
-      // this._ordersService.getOrdersCount(),
+      this._ordersService.getOrdersCount(),
       // this._ordersService.getTotalSales(),
       this._usersService.getUsersCount(),
-      this._productService.getProductsCount()
-    ]).pipe(takeUntil(this._dashboardSubject)).subscribe((values: [number, number]): [number, number] => this.statistics = values);
+      this._productService.getProductsCount(),
+    ])
+      .pipe(takeUntil(this._dashboardSubject))
+      .subscribe(
+        (values: [number, number, number]): [number, number, number] =>
+          (this.statistics = values)
+      );
   }
 
   ngOnDestroy(): void {
     this._dashboardSubject.next(null);
-    this._dashboardSubject.complete()
+    this._dashboardSubject.complete();
   }
 }

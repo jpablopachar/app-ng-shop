@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -6,6 +6,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { CartService, OrdersModule } from '@client/orders';
 import { ProductsModule, ProductsService } from '@client/products';
 import { UiModule } from '@client/ui';
+import { AuthInterceptor, UsersFacade, UsersModule } from '@client/users';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 import { AccordionModule } from 'primeng/accordion';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
@@ -17,10 +20,7 @@ import { HeaderComponent } from './shared/header/header.component';
 import { MessagesComponent } from './shared/messages/messages.component';
 import { NavComponent } from './shared/nav/nav.component';
 
-const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'products', component: ProductsListComponent },
-];
+const routes: Routes = [{ path: '', component: HomeComponent }];
 
 @NgModule({
   declarations: [
@@ -37,13 +37,16 @@ const routes: Routes = [
     BrowserAnimationsModule,
     RouterModule.forRoot(routes),
     HttpClientModule,
+    StoreModule.forRoot({}),
+    EffectsModule.forRoot([]),
     AccordionModule,
     ToastModule,
     ProductsModule,
     OrdersModule,
+    UsersModule,
     UiModule,
   ],
-  providers: [ProductsService, CartService, MessageService],
+  providers: [UsersFacade, ProductsService, CartService, MessageService, { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

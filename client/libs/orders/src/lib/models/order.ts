@@ -1,9 +1,8 @@
-import { User } from "@client/users";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { OrderItem } from "./order-item";
 
 export interface Order {
   id?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   orderItems: OrderItem | any;
   shippingAddress1: string;
   shippingAddress2: string;
@@ -13,6 +12,6 @@ export interface Order {
   phone: string;
   status: number;
   totalPrice?: string;
-  user: User | string;
+  user: any;
   dateOrdered: string;
 }

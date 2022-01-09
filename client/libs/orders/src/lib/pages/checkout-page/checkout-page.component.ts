@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -6,7 +6,8 @@ import {
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UsersService } from '@client/users';
+import { User, UsersService } from '@client/users';
+import { Subscription } from 'rxjs';
 import { Cart, CartItem } from '../../models/cart';
 import { Order } from '../../models/order';
 import { OrderItem } from '../../models/order-item';
@@ -17,7 +18,7 @@ import { OrdersService } from '../../services/orders.service';
   selector: 'orders-checkout-page',
   templateUrl: './checkout-page.component.html',
 })
-export class CheckoutPageComponent implements OnInit {
+export class CheckoutPageComponent implements OnInit, OnDestroy {
   public isSubmitted: boolean;
   public orderItems: OrderItem[];
   public userId: string;
@@ -26,6 +27,8 @@ export class CheckoutPageComponent implements OnInit {
     name: string;
   }[];
   public form: FormGroup;
+
+  private checkoutPageSubs: Subscription | undefined;
 
   constructor(
     private readonly _router: Router,
@@ -55,6 +58,8 @@ export class CheckoutPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('se inicia componente')
+    this.autoFillUserData();
     this.getCartItems();
     this.getCountries();
   }
@@ -91,6 +96,23 @@ export class CheckoutPageComponent implements OnInit {
     this._router.navigateByUrl('cart');
   }
 
+  private autoFillUserData(): void {
+    console.log('entra en funcion');
+    
+    this.checkoutPageSubs = this._usersService.observeCurrentUser().subscribe((user: User | null): void => {
+      if (user) {
+        console.log(user);
+        
+        const { id, name, email, phone, city, street, country, zip, apartment } = user;
+
+        this.userId = id;
+
+        this.form.patchValue({ name, email, phone, city, street, country, zip, apartment })
+        // this.form.controls['name'].setValue(name);
+      }
+    })
+  }
+
   private getCartItems(): void {
     const cart: Cart = this._cartService.getCart();
 
@@ -104,5 +126,11 @@ export class CheckoutPageComponent implements OnInit {
 
   private getCountries(): void {
     this.countries = this._usersService.getCountries();
+  }
+
+  ngOnDestroy(): void {
+    if (this.checkoutPageSubs) {
+      this.checkoutPageSubs.unsubscribe();
+    }
   }
 }

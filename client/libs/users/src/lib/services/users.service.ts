@@ -4,6 +4,7 @@ import { environment } from '@env/environment';
 import { getName, getNames, registerLocale } from 'i18n-iso-countries';
 import { map, Observable } from 'rxjs';
 import { User } from '../models/user';
+import { UsersFacade } from '../state/users.facade';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const require: any;
@@ -14,7 +15,10 @@ declare const require: any;
 export class UsersService {
   private _urlUsers: string;
 
-  constructor(private readonly _http: HttpClient) {
+  constructor(
+    private readonly _http: HttpClient,
+    private readonly _usersFacade: UsersFacade
+  ) {
     this._urlUsers = `${environment.apiUrl}/users`;
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -65,5 +69,17 @@ export class UsersService {
 
   public getCountry(countryKey: string): string {
     return getName(countryKey, 'en');
+  }
+
+  public initAppSession(): void {
+    this._usersFacade.buildUserSession()
+  }
+
+  public observeCurrentUser(): Observable<User | null> {
+    return this._usersFacade.currentUser$;
+  }
+
+  public isCurrentUserAuth(): Observable<boolean> {
+    return this._usersFacade.isAuthenticated$;
   }
 }

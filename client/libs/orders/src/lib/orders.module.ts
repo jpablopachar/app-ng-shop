@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Route, RouterModule } from '@angular/router';
-import { UsersService } from '@client/users';
+import { AuthGuard } from '@client/users';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
@@ -18,7 +18,7 @@ import { ThankYouComponent } from './pages/thank-you/thank-you.component';
 
 export const ordersRoutes: Route[] = [
   { path: 'cart', component: CartPageComponent },
-  { path: 'checkout', component: CheckoutPageComponent },
+  { path: 'checkout', component: CheckoutPageComponent, canActivate: [AuthGuard] },
   { path: 'success', component: ThankYouComponent },
 ];
 
@@ -43,7 +43,7 @@ export const ordersRoutes: Route[] = [
     CheckoutPageComponent,
   ],
   exports: [CartIconComponent, CartPageComponent, OrderSummaryComponent],
-  providers: [UsersService]
+  providers: [AuthGuard]
 })
 export class OrdersModule {
   constructor(private readonly _cartService: CartService) {
