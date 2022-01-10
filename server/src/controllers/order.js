@@ -1,5 +1,7 @@
 const Order = require('../models/order')
+const Product = require('../models/product')
 const OrderItem = require('../models/order-item')
+const stripe = require('stripe')(process.env.STRIPE_KEY)
 
 const orderController = {}
 
@@ -155,6 +157,36 @@ orderController.getUserOrders = async (req, res) => {
   if (!userOrders) return res.status(500).json({ success: false })
 
   res.send(userOrders)
+}
+
+orderController.createCheckoutSession = async (req, res) => {
+  const orderItems = req.body
+
+  if (!orderItems) return res.status(400).send('Checkout session cannot be created - check the order items')
+
+  const lineItems = await Promise.all(orderItems.map(async (orderItem) => {
+    const product = await Product.findById(orderItem.product)
+    const { name, price } = product
+
+    return {
+      price_data: {
+        currency: 'usd',
+        product_data: { name },
+        unit_amount: price * 100
+      },
+      quiantity: orderItem.quantity
+    }
+  }))
+
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ['card'],
+    line_items: lineItems,
+    mode: 'payment',
+    success_url: 'http://localhost:4200/success',
+    cancel_url: 'http://localhost:4200/error'
+  })
+
+  res.json({ id: session.id })
 }
 
 module.exports = orderController
