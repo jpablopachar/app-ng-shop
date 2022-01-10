@@ -9,6 +9,7 @@ import { UiModule } from '@client/ui';
 import { AuthInterceptor, UsersFacade, UsersModule } from '@client/users';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
+import { NgxStripeModule } from 'ngx-stripe';
 import { AccordionModule } from 'primeng/accordion';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
@@ -39,6 +40,7 @@ const routes: Routes = [{ path: '', component: HomeComponent }];
     HttpClientModule,
     StoreModule.forRoot({}),
     EffectsModule.forRoot([]),
+    NgxStripeModule.forRoot('pk_test_H3JbaVGLFSUBKNAZIIOvrTQ100AXoGBlPi'),
     AccordionModule,
     ToastModule,
     ProductsModule,
@@ -46,7 +48,13 @@ const routes: Routes = [{ path: '', component: HomeComponent }];
     UsersModule,
     UiModule,
   ],
-  providers: [UsersFacade, ProductsService, CartService, MessageService, { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
+  providers: [
+    UsersFacade,
+    ProductsService,
+    CartService,
+    MessageService,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

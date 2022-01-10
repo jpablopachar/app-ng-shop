@@ -174,7 +174,7 @@ orderController.createCheckoutSession = async (req, res) => {
         product_data: { name },
         unit_amount: price * 100
       },
-      quiantity: orderItem.quantity
+      quantity: orderItem.quantity
     }
   }))
 
@@ -182,11 +182,11 @@ orderController.createCheckoutSession = async (req, res) => {
     payment_method_types: ['card'],
     line_items: lineItems,
     mode: 'payment',
-    success_url: 'http://localhost:4200/success',
-    cancel_url: 'http://localhost:4200/error'
+    success_url: 'http://localhost:4100/success',
+    cancel_url: 'http://localhost:4100/error'
   })
 
-  res.json({ id: session.id })
+  res.status(200).json({ id: session.id })
 }
 
 module.exports = orderController

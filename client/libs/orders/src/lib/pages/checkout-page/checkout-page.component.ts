@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { User, UsersService } from '@client/users';
+import { StripeError } from '@stripe/stripe-js';
 import { Subscription } from 'rxjs';
 import { Cart, CartItem } from '../../models/cart';
 import { Order } from '../../models/order';
@@ -86,9 +87,9 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
       dateOrdered: `${Date.now()}`,
     };
 
-    this._ordersService.createOrder(order).subscribe(() => {
-      this._cartService.emptyCart();
-      this._router.navigateByUrl('success');
+    this._ordersService.cacheOrderData(order);
+    this._ordersService.createCheckoutSession(this.orderItems).subscribe((error: { error: StripeError }): void => {
+      if (error) console.log('Error in redirect to payment');
     });
   }
 
@@ -101,14 +102,11 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
     
     this.checkoutPageSubs = this._usersService.observeCurrentUser().subscribe((user: User | null): void => {
       if (user) {
-        console.log(user);
-        
         const { id, name, email, phone, city, street, country, zip, apartment } = user;
 
         this.userId = id;
 
         this.form.patchValue({ name, email, phone, city, street, country, zip, apartment })
-        // this.form.controls['name'].setValue(name);
       }
     })
   }

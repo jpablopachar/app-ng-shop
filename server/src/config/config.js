@@ -15,8 +15,6 @@ app.use(authJwt())
 app.use(express.static(path.join(__dirname, '../public/uploads/')))
 app.use(errorHandler)
 
-console.log(path.join(__dirname))
-
 app.use('/api/categories', require('../routes/category'))
 app.use('/api/products', require('../routes/product'))
 app.use('/api/users', require('../routes/user'))

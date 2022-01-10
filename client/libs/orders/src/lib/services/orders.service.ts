@@ -1,8 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@env/environment';
-import { map, Observable } from 'rxjs';
+import { StripeError } from '@stripe/stripe-js';
+import { StripeService } from 'ngx-stripe';
+import { map, Observable, switchMap } from 'rxjs';
 import { Order } from '../models/order';
+import { OrderItem } from '../models/order-item';
+
+const ORDERDATA = 'orderData';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +16,10 @@ export class OrdersService {
   private _urlOrders: string;
   private _urlProducts: string;
 
-  constructor(private readonly _http: HttpClient) {
+  constructor(
+    private readonly _http: HttpClient,
+    private readonly _stripeService: StripeService
+  ) {
     this._urlOrders = `${environment.apiUrl}/orders`;
     this._urlProducts = `${environment.apiUrl}/products`;
   }
@@ -57,5 +65,32 @@ export class OrdersService {
 
   public getProduct(productId: string): Observable<any> {
     return this._http.get<any>(`${this._urlProducts}/${productId}`);
+  }
+
+  public createCheckoutSession(orderItem: OrderItem[]): Observable<{
+    error: StripeError;
+  }> {
+    return this._http
+      .post<{ id: string }>(
+        `${this._urlOrders}/create-checkout-session`,
+        orderItem
+      )
+      .pipe(
+        switchMap((session: { id: string }) =>
+          this._stripeService.redirectToCheckout({ sessionId: session.id })
+        )
+      );
+  }
+
+  public cacheOrderData(order: Order): void {
+    localStorage.setItem(ORDERDATA, JSON.stringify(order))
+  }
+
+  public getCachedOrderData(): Order {
+    return JSON.parse((localStorage.getItem(ORDERDATA) as string))
+  }
+
+  public removeCachedOrderData(): void {
+    localStorage.removeItem(ORDERDATA)
   }
 }
